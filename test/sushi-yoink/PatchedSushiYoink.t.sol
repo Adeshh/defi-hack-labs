@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import {Test, console} from "forge-std/Test.sol";
 import {SushiAttacker, IRouteProcessor2, IERC20} from "../../src/sushi-yoink/SushiAttacker.sol";
 import {ForkUtils} from "../common/ForkUtils.t.sol";
+import {RouteProcessor2Fixed} from "../../src/sushi-yoink/PatchedRouteProcessor2.sol";
 
 contract SushiYoink is Test, ForkUtils {
     /**
@@ -16,9 +17,11 @@ contract SushiYoink is Test, ForkUtils {
     //Importants addresses
     address constant ROUTER_ADDRESS = 0x044b75f554b886A065b9567891e45c79542d7357;
     address constant WETH_ADDRESS = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    address constant UNISWAP_V3_FACTORY_ADDRESS = 0x1F98431c8aD98523631AE4a59f267346ea31F984;
     uint256 constant BLOCK_NUMBER = 17007838; //one block before the attack happened
 
     SushiAttacker public attacker;
+    RouteProcessor2Fixed public routeProcessor2Fixed;
     IERC20 public weth;
     address public realVictim;
     address public victim1;
@@ -36,7 +39,9 @@ contract SushiYoink is Test, ForkUtils {
         //deploy contracts
         attacker = new SushiAttacker(ROUTER_ADDRESS);
         weth = IERC20(WETH_ADDRESS);
-
+        routeProcessor2Fixed = new RouteProcessor2Fixed(UNISWAP_V3_FACTORY_ADDRESS);
+        //etch the routeProcessor2Fixed contract to the router address
+        vm.etch(ROUTER_ADDRESS, address(routeProcessor2Fixed).code);//Replace the router contract code with the patched contract
         console.log("Attacker deployed at:", address(attacker));
 
         // Initialize victims
@@ -49,40 +54,18 @@ contract SushiYoink is Test, ForkUtils {
         _setupVictims(victim2, 32 ether);
     }
 
-    function testRealVictimExploit() public {
+    function testRealVictimExploitReverts() public {
         uint256 realVictimBalanceBefore = weth.balanceOf(realVictim);
         uint256 attackerBalanceBefore = weth.balanceOf(address(attacker));
 
+        vm.expectRevert("RouteProcessor2Fixed: invalid pool");
         attacker.exploit(WETH_ADDRESS, realVictim);
 
         uint256 realVictimBalanceAfter = weth.balanceOf(realVictim);
-        assertEq(realVictimBalanceAfter, 0);
-        assertEq(weth.balanceOf(address(attacker)), attackerBalanceBefore + realVictimBalanceBefore);
+        assertEq(realVictimBalanceAfter, realVictimBalanceBefore);
+        assertEq(weth.balanceOf(address(attacker)), attackerBalanceBefore);
     }
 
-    function testBatchExploit() public {
-        address[] memory victims = new address[](3);
-        victims[0] = realVictim;
-        victims[1] = victim1;
-        victims[2] = victim2;
-
-        uint256 attackerBalanceBefore = weth.balanceOf(address(attacker));
-        uint256 realVictimBalanceBefore = weth.balanceOf(realVictim);
-        uint256 victim1BalanceBefore = weth.balanceOf(victim1);
-        uint256 victim2BalanceBefore = weth.balanceOf(victim2);
-
-        attacker.batchExploit(WETH_ADDRESS, victims);
-
-        uint256 attackerBalanceAfter = weth.balanceOf(address(attacker));
-        uint256 realVictimBalanceAfter = weth.balanceOf(realVictim);
-        uint256 victim1BalanceAfter = weth.balanceOf(victim1);
-        uint256 victim2BalanceAfter = weth.balanceOf(victim2);
-
-        assertEq(attackerBalanceAfter, attackerBalanceBefore + realVictimBalanceBefore + victim1BalanceBefore + victim2BalanceBefore);
-        assertEq(realVictimBalanceAfter, 0);
-        assertEq(victim1BalanceAfter, 0);
-        assertEq(victim2BalanceAfter, 0);
-    }
 
     //Helper function to setup victims
     function _setupVictims(address victimAddress, uint256 Amount) internal {

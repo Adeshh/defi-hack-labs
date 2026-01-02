@@ -11,18 +11,20 @@ This repository contains educational simulations of historical DeFi exploits, im
 ```
 ├── src/                    # Source contracts
 │   ├── common/            # Common interfaces and utilities
-│   └── sushi-yoink/       # SushiSwap RouteProcessor2 exploit
+│   └── sushi-yoink/       # Attack simulation contracts
 ├── test/                  # Test files
 │   ├── common/           # Common test utilities
-│   └── sushi-yoink/      # SushiSwap exploit tests
+│   └── sushi-yoink/      # Attack simulation tests
+├── docs/                  # Detailed documentation
+│   └── 01-sushi-yoink.md # Attack #01 documentation
 └── lib/                   # Dependencies (forge-std)
 ```
 
 ## Prerequisites
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation)
-- Node.js (for dependencies)
 - Access to an Ethereum RPC endpoint (for fork testing)
+- Archive node RPC URL recommended for historical block access
 
 ## Setup
 
@@ -56,7 +58,7 @@ forge build
 # Run all tests
 forge test
 
-# Run specific test
+# Run specific test with verbosity
 forge test --mt testSingleVictimExploit -vvv
 ```
 
@@ -66,20 +68,21 @@ The project uses `ForkUtils` for managing blockchain forks. Fork tests require:
 - An archive node RPC URL (for historical blocks)
 - Proper environment variables set in `.env`
 
-## Exploits
+## Simulated Attacks
 
-### SushiSwap RouteProcessor2 (April 2023)
+| # | Attack Name | Documentation |
+|---|-------------|---------------|
+| 01 | SushiSwap RouteProcessor2 | [docs/01-sushi-yoink.md](docs/01-sushi-yoink.md) |
 
-**Attack Vector**: Approval-based exploit where RouteProcessor2 didn't verify pool deployer, allowing fake UniV3 pools to drain approved tokens.
+## Documentation
 
-**References**:
-- [Rekt Article](https://rekt.news/sushi-yoink-rekt)
-- [Router Contract](https://etherscan.io/address/0x044b75f554b886A065b9567891e45c79542d7357)
+Detailed documentation for each attack simulation can be found in the `docs/` directory. Each document includes:
 
-**Test**:
-```bash
-forge test --mt testSingleVictimExploit -vvv
-```
+- Attack overview and timeline
+- Vulnerability analysis
+- Attack flow explanation
+- Fix implementation details
+- Key learnings and security best practices
 
 ## Contributing
 
@@ -87,9 +90,13 @@ This is an educational repository. Contributions, improvements, and additional e
 
 ## Disclaimer
 
-This repository is for educational and security research purposes only. Do not use these exploits maliciously. Always follow responsible disclosure practices.
+**This repository is for educational and security research purposes only.** 
+
+- Do not use these exploits maliciously
+- Always follow responsible disclosure practices
+- These simulations are intended to help developers understand vulnerabilities and improve security
+- Use at your own risk
 
 ## License
 
 MIT
-
