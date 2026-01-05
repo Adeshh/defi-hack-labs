@@ -5,7 +5,6 @@ import {Test} from "forge-std/Test.sol";
 
 /**
  * @title ForkUtils
- * @author DeFi Hack Labs
  * @notice Utility contract for managing blockchain forks to simulate historical attacks
  * @dev Provides a simple interface to create and manage forks for testing exploit simulations.
  *      Forks are stored in a mapping keyed by attack identifier for easy reuse across tests.

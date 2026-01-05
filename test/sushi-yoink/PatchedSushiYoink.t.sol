@@ -41,11 +41,11 @@ contract SushiYoink is Test, ForkUtils {
         weth = IERC20(WETH_ADDRESS);
         routeProcessor2Fixed = new RouteProcessor2Fixed(UNISWAP_V3_FACTORY_ADDRESS);
         //etch the routeProcessor2Fixed contract to the router address
-        vm.etch(ROUTER_ADDRESS, address(routeProcessor2Fixed).code);//Replace the router contract code with the patched contract
+        vm.etch(ROUTER_ADDRESS, address(routeProcessor2Fixed).code); //Replace the router contract code with the patched contract
         console.log("Attacker deployed at:", address(attacker));
 
         // Initialize victims
-        realVictim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1;//real mainnet victim at attack time
+        realVictim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1; //real mainnet victim at attack time
         victim1 = makeAddr("victim1");
         victim2 = makeAddr("victim2");
 
@@ -65,7 +65,6 @@ contract SushiYoink is Test, ForkUtils {
         assertEq(realVictimBalanceAfter, realVictimBalanceBefore);
         assertEq(weth.balanceOf(address(attacker)), attackerBalanceBefore);
     }
-
 
     //Helper function to setup victims
     function _setupVictims(address victimAddress, uint256 Amount) internal {
