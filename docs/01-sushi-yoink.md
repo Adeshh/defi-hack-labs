@@ -106,18 +106,12 @@ function uniswapV3SwapCallback(...) external {
 - **File**: `src/sushi-yoink/SushiAttacker.sol`
 - **Purpose**: Simulates the attacker's malicious contract that impersonates a Uniswap V3 pool
 
-### Patched Contract
-- **File**: `src/sushi-yoink/PatchedRouteProcessor2.sol`
-- **Purpose**: Demonstrates the fix by adding pool validation in the callback
 
 ### Tests
 - **File**: `test/sushi-yoink/SushiYoink.t.sol`
   - Tests the exploit against vulnerable router
   - Verifies tokens can be drained from victims
   
-- **File**: `test/sushi-yoink/PatchedSushiYoink.t.sol`
-  - Tests that the patched router prevents the exploit
-  - Verifies the attack reverts with proper error message
 
 ## Running the Simulation
 
@@ -130,10 +124,6 @@ function uniswapV3SwapCallback(...) external {
 forge test --match-path test/sushi-yoink/SushiYoink.t.sol -vvv
 ```
 
-### Test Patched Version
-```bash
-forge test --match-path test/sushi-yoink/PatchedSushiYoink.t.sol -vvv
-```
 
 ## Key Learnings
 
