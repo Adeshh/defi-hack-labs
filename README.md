@@ -72,6 +72,8 @@ The project uses `ForkUtils` for managing blockchain forks. Fork tests require:
 | # | Attack Name | Documentation |
 |---|-------------|---------------|
 | 01 | SushiSwap RouteProcessor2 | [docs/01-sushi-yoink.md](docs/01-sushi-yoink.md) |
+| 02 | Balancer V2 ComposableStablePool | [docs/02-balancer2025.md](docs/02-balancer2025.md) |
+| 03 | Euler Finance | [docs/03-euler2023.md](docs/03-euler2023.md) |
 
 ## Documentation
 

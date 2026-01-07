@@ -44,9 +44,9 @@ The RouteProcessor2 contract's `uniswapV3SwapCallback` function did not verify t
    └─ Passes victim address and token address in callback data
 
 5. Router's uniswapV3SwapCallback()
-   └─ ❌ VULNERABILITY: Doesn't verify msg.sender is legitimate pool
+   └─ VULNERABILITY: Doesn't verify msg.sender is legitimate pool
    └─ Executes token.transferFrom(victim, attacker, amount)
-   └─ ✅ Exploit succeeds - tokens drained from victim
+   └─ Exploit succeeds - tokens drained from victim
 ```
 
 ### Key Code Vulnerability
