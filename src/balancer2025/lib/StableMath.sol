@@ -15,8 +15,6 @@
 pragma solidity ^0.8.0;
 // and change relevant version to ^0.8.0
 
-
-
 // These functions start with an underscore, as if they were part of a contract and not a library. At some point this
 // should be fixed. Additionally, some variables have non mixed case names (e.g. P_D) that relate to the mathematical
 // derivations.
@@ -100,11 +98,8 @@ library StableMath {
                     invariant
                 ),
                 // ((ampTimesTotal - _AMP_PRECISION) * invariant) / _AMP_PRECISION + (numTokens + 1) * D_P
-                (
-                    Math.divDown(Math.mul((ampTimesTotal - _AMP_PRECISION), invariant), _AMP_PRECISION).add(
-                        Math.mul((numTokens + 1), D_P)
-                    )
-                )
+                (Math.divDown(Math.mul((ampTimesTotal - _AMP_PRECISION), invariant), _AMP_PRECISION)
+                        .add(Math.mul((numTokens + 1), D_P)))
             );
 
             if (invariant > prevInvariant) {
@@ -145,10 +140,7 @@ library StableMath {
         balances[tokenIndexIn] = balances[tokenIndexIn].add(tokenAmountIn);
 
         uint256 finalBalanceOut = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-            amplificationParameter,
-            balances,
-            invariant,
-            tokenIndexOut
+            amplificationParameter, balances, invariant, tokenIndexOut
         );
 
         // No need to use checked arithmetic since `tokenAmountIn` was actually added to the same balance right before
@@ -185,10 +177,7 @@ library StableMath {
         balances[tokenIndexOut] = balances[tokenIndexOut].sub(tokenAmountOut);
 
         uint256 finalBalanceIn = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-            amplificationParameter,
-            balances,
-            invariant,
-            tokenIndexIn
+            amplificationParameter, balances, invariant, tokenIndexIn
         );
 
         // No need to use checked arithmetic since `tokenAmountOut` was actually subtracted from the same balance right
@@ -268,12 +257,8 @@ library StableMath {
         uint256 newInvariant = bptTotalSupply.add(bptAmountOut).divUp(bptTotalSupply).mulUp(currentInvariant);
 
         // Calculate amount in without fee.
-        uint256 newBalanceTokenIndex = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-            amp,
-            balances,
-            newInvariant,
-            tokenIndex
-        );
+        uint256 newBalanceTokenIndex =
+            _getTokenBalanceGivenInvariantAndAllOtherBalances(amp, balances, newInvariant, tokenIndex);
         uint256 amountInWithoutFee = newBalanceTokenIndex.sub(balances[tokenIndex]);
 
         // First calculate the sum of all token balances, which will be used to calculate
@@ -365,12 +350,8 @@ library StableMath {
         uint256 newInvariant = bptTotalSupply.sub(bptAmountIn).divUp(bptTotalSupply).mulUp(currentInvariant);
 
         // Calculate amount out without fee
-        uint256 newBalanceTokenIndex = _getTokenBalanceGivenInvariantAndAllOtherBalances(
-            amp,
-            balances,
-            newInvariant,
-            tokenIndex
-        );
+        uint256 newBalanceTokenIndex =
+            _getTokenBalanceGivenInvariantAndAllOtherBalances(amp, balances, newInvariant, tokenIndex);
         uint256 amountOutWithoutFee = balances[tokenIndex].sub(newBalanceTokenIndex);
 
         // First calculate the sum of all token balances, which will be used to calculate
@@ -416,10 +397,8 @@ library StableMath {
 
         uint256 inv2 = Math.mul(invariant, invariant);
         // We remove the balance from c by multiplying it
-        uint256 c = Math.mul(
-            Math.mul(Math.divUp(inv2, Math.mul(ampTimesTotal, P_D)), _AMP_PRECISION),
-            balances[tokenIndex]
-        );
+        uint256 c =
+            Math.mul(Math.mul(Math.divUp(inv2, Math.mul(ampTimesTotal, P_D)), _AMP_PRECISION), balances[tokenIndex]);
         uint256 b = sum.add(Math.mul(Math.divDown(invariant, ampTimesTotal), _AMP_PRECISION));
 
         // We iterate to find the balance
@@ -432,8 +411,7 @@ library StableMath {
             prevTokenBalance = tokenBalance;
 
             tokenBalance = Math.divUp(
-                Math.mul(tokenBalance, tokenBalance).add(c),
-                Math.mul(tokenBalance, 2).add(b).sub(invariant)
+                Math.mul(tokenBalance, tokenBalance).add(c), Math.mul(tokenBalance, 2).add(b).sub(invariant)
             );
 
             if (tokenBalance > prevTokenBalance) {
@@ -448,10 +426,6 @@ library StableMath {
         _revert(Errors.STABLE_GET_BALANCE_DIDNT_CONVERGE);
     }
 }
-
-
-
-
 
 /* solhint-disable private-vars-leading-underscore */
 
@@ -595,8 +569,6 @@ library FixedPoint {
     }
 }
 
-
-
 /**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow checks.
  * Adapted from OpenZeppelin's SafeMath library.
@@ -665,11 +637,7 @@ library Math {
         return c;
     }
 
-    function div(
-        uint256 a,
-        uint256 b,
-        bool roundUp
-    ) internal pure returns (uint256) {
+    function div(uint256 a, uint256 b, bool roundUp) internal pure returns (uint256) {
         return roundUp ? divUp(a, b) : divDown(a, b);
     }
 
@@ -953,7 +921,6 @@ library Errors {
     uint256 internal constant SHOULD_NOT_HAPPEN = 999;
 }
 
-
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the “Software”), to deal in the Software without restriction, including without limitation the
 // rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
@@ -966,8 +933,6 @@ library Errors {
 // WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 
 /* solhint-disable */
 
@@ -1008,7 +973,7 @@ library LogExpMath {
     int256 constant LN_36_LOWER_BOUND = ONE_18 - 1e17;
     int256 constant LN_36_UPPER_BOUND = ONE_18 + 1e17;
 
-    uint256 constant MILD_EXPONENT_BOUND = 2**254 / uint256(ONE_20);
+    uint256 constant MILD_EXPONENT_BOUND = 2 ** 254 / uint256(ONE_20);
 
     // 18 decimal constants
     int256 constant x0 = 128000000000000000000; // 2ˆ7
@@ -1084,8 +1049,7 @@ library LogExpMath {
 
         // Finally, we compute exp(y * ln(x)) to arrive at x^y
         _require(
-            MIN_NATURAL_EXPONENT <= logx_times_y && logx_times_y <= MAX_NATURAL_EXPONENT,
-            Errors.PRODUCT_OUT_OF_BOUNDS
+            MIN_NATURAL_EXPONENT <= logx_times_y && logx_times_y <= MAX_NATURAL_EXPONENT, Errors.PRODUCT_OUT_OF_BOUNDS
         );
 
         return uint256(exp(logx_times_y));
