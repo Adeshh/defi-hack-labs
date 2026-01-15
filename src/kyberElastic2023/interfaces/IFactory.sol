@@ -49,9 +49,7 @@ interface IFactory {
     /// @dev Once added, cannot be updated or removed.
     /// @param swapFeeUnits Swap fee, in fee units.
     /// @return The tick distance. Returns 0 if fee has not been added.
-    function feeAmountTickDistance(
-        uint24 swapFeeUnits
-    ) external view returns (int24);
+    function feeAmountTickDistance(uint24 swapFeeUnits) external view returns (int24);
 
     /// @notice Returns the address which can update the fee configuration
     function configMaster() external view returns (address);
@@ -82,9 +80,7 @@ interface IFactory {
     /// only whitelisted NFT manager(s) are allowed to mint liquidity tokens
     /// @param sender address to be checked
     /// @return true if sender is a whistelisted NFT manager, false otherwise
-    function isWhitelistedNFTManager(
-        address sender
-    ) external view returns (bool);
+    function isWhitelistedNFTManager(address sender) external view returns (bool);
 
     /// @notice Returns the pool address for a given pair of tokens and a swap fee
     /// @dev Token order does not matter
@@ -134,15 +130,11 @@ interface IFactory {
 
     /// @notice Updates the address which can update the fee configuration
     /// @dev Must be called by the current configMaster
-    function updateConfigMaster(
-        address
-    ) external;
+    function updateConfigMaster(address) external;
 
     /// @notice Updates the vesting period
     /// @dev Must be called by the current configMaster
-    function updateVestingPeriod(
-        uint32
-    ) external;
+    function updateVestingPeriod(uint32) external;
 
     /// @notice Updates the address receiving government fees and fee quantity
     /// @dev Only configMaster is able to perform the update

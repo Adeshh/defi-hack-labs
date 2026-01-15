@@ -113,52 +113,42 @@ interface IBasePositionManager is IRouterTokenHelper, IBasePositionManagerEvents
     /// @param fee the fee for the pool
     /// @param currentSqrtP the initial price of the pool
     /// @return pool returns the pool address
-    function createAndUnlockPoolIfNecessary(
-        address token0,
-        address token1,
-        uint24 fee,
-        uint160 currentSqrtP
-    ) external payable returns (address pool);
+    function createAndUnlockPoolIfNecessary(address token0, address token1, uint24 fee, uint160 currentSqrtP)
+        external
+        payable
+        returns (address pool);
 
-    function mint(
-        MintParams calldata params
-    ) external payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
+    function mint(MintParams calldata params)
+        external
+        payable
+        returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
 
-    function addLiquidity(
-        IncreaseLiquidityParams calldata params
-    ) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function addLiquidity(IncreaseLiquidityParams calldata params)
+        external
+        payable
+        returns (uint128 liquidity, uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
 
-    function removeLiquidity(
-        RemoveLiquidityParams calldata params
-    ) external returns (uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
+    function removeLiquidity(RemoveLiquidityParams calldata params)
+        external
+        returns (uint256 amount0, uint256 amount1, uint256 additionalRTokenOwed);
 
-    function burnRTokens(
-        BurnRTokenParams calldata params
-    ) external returns (uint256 rTokenQty, uint256 amount0, uint256 amount1);
+    function burnRTokens(BurnRTokenParams calldata params)
+        external
+        returns (uint256 rTokenQty, uint256 amount0, uint256 amount1);
 
     /**
      * @dev Burn the token by its owner
      * @notice All liquidity should be removed before burning
      */
-    function burn(
-        uint256 tokenId
-    ) external payable;
+    function burn(uint256 tokenId) external payable;
 
-    function syncFeeGrowth(
-        uint256 tokenId
-    ) external returns (uint256 additionalRTokenOwed);
+    function syncFeeGrowth(uint256 tokenId) external returns (uint256 additionalRTokenOwed);
 
-    function positions(
-        uint256 tokenId
-    ) external view returns (Position memory pos, PoolInfo memory info);
+    function positions(uint256 tokenId) external view returns (Position memory pos, PoolInfo memory info);
 
-    function addressToPoolId(
-        address pool
-    ) external view returns (uint80);
+    function addressToPoolId(address pool) external view returns (uint80);
 
-    function isRToken(
-        address token
-    ) external view returns (bool);
+    function isRToken(address token) external view returns (bool);
 
     function nextPoolId() external view returns (uint80);
 
@@ -172,7 +162,5 @@ interface IBasePositionManager is IRouterTokenHelper, IBasePositionManagerEvents
      *
      * This function call must use less than 30 000 gas.
      */
-    function supportsInterface(
-        bytes4 interfaceId
-    ) external view returns (bool);
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }

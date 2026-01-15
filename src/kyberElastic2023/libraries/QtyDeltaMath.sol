@@ -13,9 +13,7 @@ library QtyDeltaMath {
     using SafeCast for uint256;
     using SafeCast for int128;
 
-    function calcUnlockQtys(
-        uint160 initialSqrtP
-    ) internal pure returns (uint256 qty0, uint256 qty1) {
+    function calcUnlockQtys(uint160 initialSqrtP) internal pure returns (uint256 qty0, uint256 qty1) {
         qty0 = FullMath.mulDivCeiling(C.MIN_LIQUIDITY, C.TWO_POW_96, initialSqrtP);
         qty1 = FullMath.mulDivCeiling(C.MIN_LIQUIDITY, initialSqrtP, C.TWO_POW_96);
     }
@@ -29,12 +27,11 @@ library QtyDeltaMath {
     /// @param liquidity Liquidity quantity
     /// @param isAddLiquidity true = add liquidity, false = remove liquidity
     /// @return token0 qty required for position with liquidity between the 2 sqrt prices
-    function calcRequiredQty0(
-        uint160 lowerSqrtP,
-        uint160 upperSqrtP,
-        uint128 liquidity,
-        bool isAddLiquidity
-    ) internal pure returns (int256) {
+    function calcRequiredQty0(uint160 lowerSqrtP, uint160 upperSqrtP, uint128 liquidity, bool isAddLiquidity)
+        internal
+        pure
+        returns (int256)
+    {
         uint256 numerator1 = uint256(liquidity) << C.RES_96;
         uint256 numerator2;
         unchecked {
@@ -53,12 +50,11 @@ library QtyDeltaMath {
     /// @param liquidity Liquidity quantity
     /// @param isAddLiquidity true = add liquidity, false = remove liquidity
     /// @return token1 qty required for position with liquidity between the 2 sqrt prices
-    function calcRequiredQty1(
-        uint160 lowerSqrtP,
-        uint160 upperSqrtP,
-        uint128 liquidity,
-        bool isAddLiquidity
-    ) internal pure returns (int256) {
+    function calcRequiredQty1(uint160 lowerSqrtP, uint160 upperSqrtP, uint128 liquidity, bool isAddLiquidity)
+        internal
+        pure
+        returns (int256)
+    {
         unchecked {
             return isAddLiquidity
                 ? (FullMath.mulDivCeiling(liquidity, upperSqrtP - lowerSqrtP, C.TWO_POW_96)).toInt256()

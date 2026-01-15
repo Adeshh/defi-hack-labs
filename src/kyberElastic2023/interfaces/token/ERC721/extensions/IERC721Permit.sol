@@ -32,7 +32,5 @@ interface IERC721Permit is IERC721, IERC721Enumerable {
      *
      * This function call must use less than 30 000 gas.
      */
-    function supportsInterface(
-        bytes4 interfaceId
-    ) external view returns (bool);
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }

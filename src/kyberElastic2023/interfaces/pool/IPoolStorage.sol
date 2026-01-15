@@ -46,9 +46,7 @@ interface IPoolStorage {
     /// liquidityNet how much liquidity changes when the pool tick crosses above the tick
     /// feeGrowthOutside the fee growth on the other side of the tick relative to the current tick
     /// secondsPerLiquidityOutside the seconds per unit of liquidity  spent on the other side of the tick relative to the current tick
-    function ticks(
-        int24 tick
-    )
+    function ticks(int24 tick)
         external
         view
         returns (
@@ -61,18 +59,15 @@ interface IPoolStorage {
     /// @notice Returns the previous and next initialized ticks of a specific tick
     /// @dev If specified tick is uninitialized, the returned values are zero.
     /// @param tick The tick to look up
-    function initializedTicks(
-        int24 tick
-    ) external view returns (int24 previous, int24 next);
+    function initializedTicks(int24 tick) external view returns (int24 previous, int24 next);
 
     /// @notice Returns the information about a position by the position's key
     /// @return liquidity the liquidity quantity of the position
     /// @return feeGrowthInsideLast fee growth inside the tick range as of the last mint / burn action performed
-    function getPositions(
-        address owner,
-        int24 tickLower,
-        int24 tickUpper
-    ) external view returns (uint128 liquidity, uint256 feeGrowthInsideLast);
+    function getPositions(address owner, int24 tickLower, int24 tickUpper)
+        external
+        view
+        returns (uint128 liquidity, uint256 feeGrowthInsideLast);
 
     /// @notice Fetches the pool's prices, ticks and lock status
     /// @return sqrtP sqrt of current price: sqrt(token1/token0)
@@ -105,8 +100,8 @@ interface IPoolStorage {
     /// @param tickUpper The upper tick (of a position)
     /// @return secondsPerLiquidityInside active time (multiplied by 2^96)
     /// between the 2 ticks, per unit of liquidity.
-    function getSecondsPerLiquidityInside(
-        int24 tickLower,
-        int24 tickUpper
-    ) external view returns (uint128 secondsPerLiquidityInside);
+    function getSecondsPerLiquidityInside(int24 tickLower, int24 tickUpper)
+        external
+        view
+        returns (uint128 secondsPerLiquidityInside);
 }
