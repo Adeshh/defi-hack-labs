@@ -9,13 +9,13 @@ This repository contains educational simulations of historical DeFi exploits, im
 ## Project Structure
 
 ```
-├── src/                   # Source contracts
-│   └── sushi-yoink/       # Attack simulation contracts
+├── src/                   # Source contracts 
+│   └── sushi-yoink/       # Required Interfaces and exploiter/attacker contracts for specific attack
 ├── test/                  # Test files
 │   ├── utils/             # Common test utilities
-│   └── sushi-yoink/       # Attack simulation tests
+│   └── sushi-yoink/       # Attack simulation tests for specific exploit 
 ├── docs/                  # Detailed documentation
-│   └── 01-sushi-yoink.md  # Attack #01 documentation
+│   └── 01-sushi-yoink.md  # Attack documentation for individual project
 └── lib/                   # Dependencies (forge-std)
 ```
 
