@@ -2,15 +2,15 @@
 
 ## Overview
 
-This document describes the simulation of the KyberSwap Elastic exploit that occurred in March 2023, resulting in the theft of approximately $265K from the frxETH/WETH pool through a precision loss vulnerability in tick crossing logic.
+This document describes the simulation of the KyberSwap Elastic exploit that occurred in November 2023, resulting in the theft of approximately $48M from multiple pools across different chains through a precision loss vulnerability in tick crossing logic.
 
 **Reference**: [BlockSec Blog - KyberSwap Elastic Exploit Analysis](https://blocksec.com/blog/yet-another-tragedy-of-precision-loss-an-in-depth-analysis-of-the-kyber-swap-incident-1)
 
 ## Attack Summary
 
-- **Date**: March 2023
-- **Amount Lost**: ~$265K
-- **Affected Pool**: frxETH/WETH pool (0xFd7B111AA83b9b6F547E617C7601EfD997F64703)
+- **Date**: November 2023
+- **Amount Lost**: ~$48M across multiple chains
+- **Affected Pool**: frxETH/WETH pool (0xFd7B111AA83b9b6F547E617C7601EfD997F64703) and others
 - **Attack Type**: Precision loss exploitation via tick boundary manipulation
 - **Root Cause**: Rounding error in `estimateIncrementalLiquidity` causing incorrect price calculation and double liquidity bug
 
@@ -83,9 +83,9 @@ function _updateLiquidityAndCrossTick(...) {
 
 ### Why This Breaks the Pool
 
-1. **Impossible State Creation**: Step 4 creates a state where `currentSqrtP` is above tick 111,310's sqrt price, but `currentTick` hasn't updated and liquidity hasn't been adjusted.
+1. **Impossible State Creation**: Step 5 creates a state where `currentSqrtP` is above tick 111,310's sqrt price, but `currentTick` hasn't updated and liquidity hasn't been adjusted.
 
-2. **Double Liquidity Exploitation**: In Step 5, when swapping back down, the code tries to cross tick 111,310 but skips the liquidity removal because `currentTick == nextTick`. This means the swap continues with liquidity that should have been removed.
+2. **Double Liquidity Exploitation**: In Step 6, when swapping back down, the code tries to cross tick 111,310 but skips the liquidity removal because `currentTick == nextTick`. This means the swap continues with liquidity that should have been removed.
 
 3. **Profit Multiplier**: With double liquidity, the constant product formula (`L² = x × y`) gives the attacker approximately 2x more output tokens for the same input, creating massive profit.
 
