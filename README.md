@@ -9,14 +9,26 @@ This repository contains educational simulations of historical DeFi exploits, im
 ## Project Structure
 
 ```
-├── src/                   # Source contracts 
-│   └── sushi-yoink/       # Required Interfaces and exploiter/attacker contracts for specific attack
-├── test/                  # Test files
-│   ├── utils/             # Common test utilities
-│   └── sushi-yoink/       # Attack simulation tests for specific exploit 
-├── docs/                  # Detailed documentation
-│   └── 01-sushi-yoink.md  # Attack documentation for individual project
-└── lib/                   # Dependencies (forge-std)
+├── src/                          # Source contracts
+│   ├── sushi-yoink/              # Required Interfaces and exploiter/attacker contracts for specific attack
+│   ├── balancer2025/
+│   ├── euler2023/
+│   ├── kyberElastic2023/
+│   └── nomad2022/
+├── test/                         # Test files
+│   ├── utils/                    # Common test utilities
+│   ├── sushi-yoink2023/          # Attack simulation tests for specific exploit
+│   ├── balancer2025/
+│   ├── euler2023/
+│   ├── kyberElastic2023/
+│   └── nomad2022/
+├── docs/                         # Detailed documentation
+│   ├── 01-sushi-yoink.md         # Attack documentation for individual project
+│   ├── 02-balancer2025.md
+│   ├── 03-euler2023.md
+│   ├── 04-kyber-elastic2023.md
+│   └── 05-nomad2022.md
+└── lib/                          # Dependencies (forge-std)
 ```
 
 ## Prerequisites
@@ -69,11 +81,13 @@ The project uses `ForkUtils` for managing blockchain forks. Fork tests require:
 
 ## Simulated Attacks
 
-| # | Attack Name | Documentation |
-|---|-------------|---------------|
-| 01 | SushiSwap RouteProcessor2 | [docs/01-sushi-yoink.md](docs/01-sushi-yoink.md) |
-| 02 | Balancer V2 ComposableStablePool | [docs/02-balancer2025.md](docs/02-balancer2025.md) |
-| 03 | Euler Finance | [docs/03-euler2023.md](docs/03-euler2023.md) |
+| # | Attack Name | Date | Amount Lost | Attack Type | Documentation |
+|---|-------------|------|-------------|-------------|---------------|
+| 01 | SushiSwap RouteProcessor2 | April 2023 | ~$3.3M | Approval-based callback exploit | [docs/01-sushi-yoink.md](docs/01-sushi-yoink.md) |
+| 02 | Balancer V2 ComposableStablePool | November 2025 | ~$128M | Rounding error via GIVEN_OUT swaps | [docs/02-balancer2025.md](docs/02-balancer2025.md) |
+| 03 | Euler Finance | March 2023 | ~$196M | Soft liquidation via `donateToReserves` | [docs/03-euler2023.md](docs/03-euler2023.md) |
+| 04 | KyberSwap Elastic | November 2023 | ~$48M | Precision loss in tick crossing logic | [docs/04-kyber-elastic2023.md](docs/04-kyber-elastic2023.md) |
+| 05 | Nomad Bridge | August 2022 | ~$152M–$190M | Message validation bypass (zero root) | [docs/05-nomad2022.md](docs/05-nomad2022.md) |
 
 ## Documentation
 
