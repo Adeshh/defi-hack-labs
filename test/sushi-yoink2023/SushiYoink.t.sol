@@ -2,7 +2,8 @@
 pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {SushiAttacker, IRouteProcessor2, IERC20} from "../../src/sushi-yoink2023/SushiYoink.sol";
+import {SushiAttacker, IRouteProcessor2} from "../../src/sushi-yoink2023/SushiYoink.sol";
+import {IERC20} from "../../src/CommonInterfaces.sol";
 import {ForkUtils} from "../utils/ForkUtils.t.sol";
 
 /**

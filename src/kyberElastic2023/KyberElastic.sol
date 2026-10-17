@@ -3,33 +3,7 @@ pragma solidity ^0.8.20;
 
 import {IBasePositionManager as IKyberswapPositionManager} from "./interfaces/periphery/IBasePositionManager.sol";
 import {IPool as IKyberswapPool} from "./interfaces/IPool.sol";
-
-interface IERC20 {
-    function approve(address spender, uint256 amount) external returns (bool);
-    function transfer(address to, uint256 amount) external returns (bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-    function balanceOf(address account) external view returns (uint256);
-}
-
-interface IAavePool {
-    function flashLoanSimple(
-        address receiverAddress,
-        address asset,
-        uint256 amount,
-        bytes memory params,
-        uint16 referralCode
-    ) external;
-}
-
-interface IUniswapV3Pool {
-    function swap(
-        address recipient,
-        bool zeroForOne,
-        int256 amountSpecified,
-        uint160 sqrtPriceLimitX96,
-        bytes calldata data
-    ) external returns (int256 amount0, int256 amount1);
-}
+import {IERC20, IAaveFlashloan, IUniswapV3Pool} from "../CommonInterfaces.sol";
 
 contract Exploiter {
     IKyberswapPool public victimPool;
@@ -49,7 +23,7 @@ contract Exploiter {
     }
 
     function trigger() public {
-        IAavePool(lender).flashLoanSimple(address(this), address(token1), flashloanAmount, "", 0);
+        IAaveFlashloan(lender).flashLoanSimple(address(this), address(token1), flashloanAmount, "", 0);
     }
 
     // Flash loan core logic
