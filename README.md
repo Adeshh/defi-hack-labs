@@ -14,20 +14,23 @@ This repository contains educational simulations of historical DeFi exploits, im
 │   ├── balancer2025/
 │   ├── euler2023/
 │   ├── kyberElastic2023/
-│   └── nomad2022/
+│   ├── nomad2022/
+│   └── uncx2026/
 ├── test/                         # Test files
 │   ├── utils/                    # Common test utilities
 │   ├── sushi-yoink2023/          # Attack simulation tests for specific exploit
 │   ├── balancer2025/
 │   ├── euler2023/
 │   ├── kyberElastic2023/
-│   └── nomad2022/
+│   ├── nomad2022/
+│   └── uncx2026/
 ├── docs/                         # Detailed documentation
 │   ├── 01-sushi-yoink.md         # Attack documentation for individual project
 │   ├── 02-balancer2025.md
 │   ├── 03-euler2023.md
 │   ├── 04-kyber-elastic2023.md
-│   └── 05-nomad2022.md
+│   ├── 05-nomad2022.md
+│   └── 07-uncx2026.md
 └── lib/                          # Dependencies (forge-std)
 ```
 
@@ -88,6 +91,7 @@ The project uses `ForkUtils` for managing blockchain forks. Fork tests require:
 | 03 | Euler Finance | March 2023 | ~$196M | Soft liquidation via `donateToReserves` | [docs/03-euler2023.md](docs/03-euler2023.md) |
 | 04 | KyberSwap Elastic | November 2023 | ~$48M | Precision loss in tick crossing logic | [docs/04-kyber-elastic2023.md](docs/04-kyber-elastic2023.md) |
 | 05 | Nomad Bridge | August 2022 | ~$152M–$190M | Message validation bypass (zero root) | [docs/05-nomad2022.md](docs/05-nomad2022.md) |
+| 07 | UNCX Smart Token Vesting | October 2026 | ~$86K–$89K | Shared-pool share-accounting drain | [docs/07-uncx2026.md](docs/07-uncx2026.md) |
 
 ## Documentation
 
